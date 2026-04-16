@@ -3,20 +3,20 @@
     <style name="Base.Theme.AppointmentScheduler" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">#05050A</item>
+        <item name="android:statusBarColor">@color/ios_bg</item>
         <item name="android:windowLightStatusBar">false</item>
-        <item name="colorPrimary">#2952E3</item>
-        <item name="colorPrimaryVariant">#1d3ab0</item>
+        <item name="colorPrimary">@color/ios_accent</item>
+        <item name="colorPrimaryVariant">@color/ios_accent</item>
         <item name="colorOnPrimary">#FFFFFF</item>
         <item name="colorSecondary">#4B4B66</item>
         <item name="colorSecondaryVariant">#2c2c3e</item>
         <item name="colorOnSecondary">#FFFFFF</item>
-        <item name="colorSurface">#13131A</item>
-        <item name="colorOnBackground">#05050A</item>
+        <item name="colorSurface">@color/ios_elevated</item>
+        <item name="colorOnBackground">@color/ios_bg</item>
         <item name="colorError">#E84141</item>
         <item name="colorOnSurface">#FFFFFF</item>
         <item name="colorOnError">#FFFFFF</item>
-        <item name="android:navigationBarColor">#13131A</item>
+        <item name="android:navigationBarColor">@color/ios_tab_bar</item>
 
     </style>
 

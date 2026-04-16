@@ -4,4 +4,39 @@
     <string name="text_view">No appointments yet.</string>
     <string name="text_profile">User Profile</string>
     <string name="text_menu">Menu Options</string>
+
+    <string name="section_calendar">Calendar</string>
+    <string name="section_next_appointments">Next appointments</string>
+    <string name="section_statistics">Statistics</string>
+
+    <string name="home_title">Your schedule</string>
+    <string name="home_calendar_subtitle">Calendar &amp; upcoming</string>
+    <string name="calendar_mode_month">Month</string>
+    <string name="calendar_mode_week">Week</string>
+    <string name="calendar_mode_agenda">Agenda</string>
+    <string name="dow_sun">S</string>
+    <string name="dow_mon">M</string>
+    <string name="dow_tue">T</string>
+    <string name="dow_wed">W</string>
+    <string name="dow_thu">T</string>
+    <string name="dow_fri">F</string>
+    <string name="dow_sat">S</string>
+    <string name="cd_prev_month">Previous month</string>
+    <string name="cd_next_month">Next month</string>
+    <string name="cd_prev_week">Previous week</string>
+    <string name="cd_next_week">Next week</string>
+    <string name="cd_add_appointment">Add appointment</string>
+    <string name="recent_appointments">Next appointments</string>
+    <string name="no_upcoming_appointments">No upcoming appointments</string>
+    <string name="stats_preview_title">Completed appointments</string>
+    <string name="stats_monthly_hint">Completed per month (recent)</string>
+    <string name="view_full_statistics">View full statistics</string>
+    <string name="statistics_title">Appointment statistics</string>
+    <string name="stats_completed_of_total">%1$d of %2$d completed</string>
+    <string name="stats_pending">%1$d pending</string>
+    <string name="appointments_on_day">Appointments on %1$s</string>
+    <string name="no_appointments_this_day">No appointments on this day</string>
+    <string name="week_day_appointments">%1$d in this week</string>
+    <string name="stats_monthly_breakdown">Completed by month</string>
+    <string name="stats_detail_template">Total: %1$d\nCompleted: %2$d\nPending: %3$d</string>
 </resources>

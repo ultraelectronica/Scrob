@@ -3,27 +3,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#05050A">
+    android:background="@drawable/bg_screen_gradient">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="View Appointments"
-        android:textSize="32sp"
-        android:fontFamily="@font/inter_extrabold"
-        android:textColor="@color/white"
-        android:paddingTop="32dp"
-        android:paddingHorizontal="24dp"
+        android:textSize="34sp"
+        android:fontFamily="@font/inter_semibold"
+        android:letterSpacing="-0.02"
+        android:textColor="@color/ios_label_primary"
+        android:paddingTop="48dp"
+        android:paddingHorizontal="20dp"
         android:paddingBottom="8dp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/text_view"
-        android:textSize="14sp"
-        android:fontFamily="@font/inter_medium"
-        android:textColor="#8F8F99"
-        android:paddingHorizontal="24dp"
+        android:textSize="16sp"
+        android:fontFamily="@font/inter_regular"
+        android:textColor="@color/ios_label_secondary"
+        android:paddingHorizontal="20dp"
         android:paddingBottom="16dp" />
 
     <ListView
