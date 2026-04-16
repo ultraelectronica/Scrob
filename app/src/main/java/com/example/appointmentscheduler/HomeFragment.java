@@ -63,21 +63,18 @@ public class HomeFragment extends Fragment {
             return;
         }
 
-        String currentUsername = dbHelper.getCurrentUsername();
         appointmentItems.clear();
 
-        if (currentUsername != null) {
-            Cursor cursor = dbHelper.readUpcomingScheduleByUser(currentUsername);
-            try {
-                while (cursor.moveToNext()) {
-                    String name = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME));
-                    String date = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DATE));
-                    String time = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_TIME));
-                    appointmentItems.add(time + "  " + date + "  -  " + name);
-                }
-            } finally {
-                cursor.close();
+        Cursor cursor = dbHelper.readUpcomingSchedules();
+        try {
+            while (cursor.moveToNext()) {
+                String name = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME));
+                String date = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DATE));
+                String time = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_TIME));
+                appointmentItems.add(time + "  " + date + "  -  " + name);
             }
+        } finally {
+            cursor.close();
         }
 
         if (adapter != null) {

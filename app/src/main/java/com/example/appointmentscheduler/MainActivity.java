@@ -42,8 +42,6 @@ public class MainActivity extends AppCompatActivity {
         } else if (itemId == R.id.add_schedule) {
             showAddAppointmentBottomSheet();
             return;
-        } else if (itemId == R.id.profile) {
-            fragment = new ProfileFragment();
         } else if (itemId == R.id.view) {
             fragment = new ViewFragment();
         } else if (itemId == R.id.more) {
