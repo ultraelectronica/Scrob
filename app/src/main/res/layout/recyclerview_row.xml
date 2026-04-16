@@ -5,29 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="10dp"
+    android:padding="8dp"
     android:clipToPadding="false"
     android:clipChildren="false"
     android:id="@+id/meetingRows">
 
-    <RelativeLayout
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/schedule1"
-        android:layout_width="369dp"
+        android:layout_width="match_parent"
         android:layout_height="120dp"
         android:layout_gravity="center"
-
-
-        android:background="@drawable/rounded_edge"
-        android:elevation="5dp"
-        android:padding="3dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:cardBackgroundColor="#13131A"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="#1F1F2E">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="16dp">
 
             <ImageView
                 android:visibility="gone"
@@ -37,90 +34,86 @@
                 android:src="@drawable/check_off"
                 android:scaleY=".7"
                 android:scaleX=".7"
-                android:translationX="6dp"
-                android:translationY="6dp"
                 tools:ignore="MissingConstraints" />
 
-            
-            
-            <TextView
-                android:id="@+id/time_tv"
+            <LinearLayout
+                android:id="@+id/datetime_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_semibold"
-                android:layout_marginStart="8dp"
-                android:text="00:00 PM"
-                android:textSize="23sp"
-                android:translationX="0dp"
-                android:translationY="-12dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent">
+                
+                <TextView
+                    android:id="@+id/time_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_extrabold"
+                    android:text="00:00 PM"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/date_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:translationX="-10dp"
-                android:text="YEAR/MM/DD"
-                android:fontFamily="@font/inter_semibold"
-                android:textSize="12sp"
-                android:translationY="-15dp"
-                app:layout_constraintEnd_toEndOf="@+id/time_tv"
-                app:layout_constraintStart_toStartOf="@+id/time_tv"
-                app:layout_constraintTop_toBottomOf="@+id/time_tv" />
+                <TextView
+                    android:id="@+id/date_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="YEAR/MM/DD"
+                    android:fontFamily="@font/inter_medium"
+                    android:textColor="#2952E3"
+                    android:textSize="12sp"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/meetname_tv"
-                android:layout_width="220dp"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="left"
-                android:text="Scheduled Cellophane Meeting #2"
-                android:textColor="@color/black"
-                android:fontFamily="@font/inter_semibold"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:translationX="55dp"
-                android:translationY="-20dp"
+                android:orientation="vertical"
+                android:layout_marginStart="16dp"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toEndOf="@id/datetime_layout"
+                app:layout_constraintEnd_toEndOf="parent">
 
-            <TextView
-                android:id="@+id/meetdescription_tv"
-                android:layout_width="220dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:justificationMode="inter_word"
-                android:lines="2"
-                android:maxLines="2"
-                android:fontFamily="@font/inter_regular"
-                android:text="Ganon po rules sa family po namin once nagpabili ako ng need sa school ay meron po tubo sakin."
-                android:textSize="10sp"
-                android:translationX="19dp"
-                android:translationY="-33dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/meetname_tv"
-                app:layout_constraintTop_toBottomOf="@+id/meetname_tv" />
+                <TextView
+                    android:id="@+id/meetname_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Scheduled Cellophane Meeting #2"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/inter_semibold"
+                    android:textSize="15sp"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
 
-            <TextView
-                android:id="@+id/meetlink_tv"
-                android:layout_width="330dp"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_semibold"
-                android:gravity="center"
-                android:justificationMode="inter_word"
-                android:text="https://meetings.example.com/j/1234567890?pwd=abc123def456"
-                android:textSize="8sp"
-                android:layout_marginBottom="10dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                <TextView
+                    android:id="@+id/meetdescription_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:lines="2"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:textColor="#8F8F99"
+                    android:fontFamily="@font/inter_regular"
+                    android:text="Ganon po rules sa family po namin once nagpabili ako ng need sa school ay meron po tubo sakin."
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/meetlink_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:fontFamily="@font/inter_medium"
+                    android:text="https://meetings.example.com/j/1234567890?pwd=abc123def456"
+                    android:textColor="#2952E3"
+                    android:textSize="10sp"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>

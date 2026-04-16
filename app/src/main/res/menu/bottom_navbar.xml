@@ -10,9 +10,6 @@
     <item android:title="Add"
         android:icon="@android:drawable/ic_menu_add"
         android:id="@+id/add_schedule"/>
-    <item android:title="Profile"
-        android:icon="@android:drawable/ic_menu_edit"
-        android:id="@+id/profile"/>
     <item android:title="Menu"
         android:icon="@android:drawable/ic_menu_more"
         android:id="@+id/more" />

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F0F0F0"
-    tools:context=".MainActivity5">
+    tools:context=".MoreMenuActivity">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/top_nav"
@@ -53,70 +53,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:paddingTop="0dp">
-
-<!--            account -->
-            <RelativeLayout
-                android:id="@+id/account"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                android:clickable="true">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="65dp"
-                    android:background="@drawable/stroke"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="70dp"
-                        android:layout_height="match_parent"
-                        android:gravity="center">
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="30dp"
-                            android:src="@drawable/profile2">
-
-                        </ImageView>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="0dp"
-                                android:layout_weight="1"
-                                android:fontFamily="@font/inter_semibold"
-                                android:paddingTop="5dp"
-                                android:text="Profile"
-                                android:textColor="#000000"
-                                android:textSize="21sp">
-
-                            </TextView>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:paddingTop="5dp"
-                            android:layout_marginStart="1dp"
-                            android:fontFamily="@font/inter_regular"
-                            android:text="Account Settings, Profile, Sync, Account Security..."
-                            android:textColor="#000000"
-                            android:textSize="12sp">
-
-                        </TextView>
-                    </LinearLayout>
-
-
-                </LinearLayout>
-            </RelativeLayout>
 
 <!--            settings    -->
             <RelativeLayout

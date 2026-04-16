@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
-    tools:context=".MainActivity8">
+    tools:context=".AppSettingsActivity">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/top_nav"

@@ -1,32 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center">
+    android:background="#05050A">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Add Appointment"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:padding="16dp" />
-
-    <ImageButton
-        android:id="@+id/buttonadd"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:src="@android:drawable/ic_input_add"
-        android:contentDescription="Add"
-        android:background="?android:attr/selectableItemBackground" />
+        android:textSize="32sp"
+        android:fontFamily="@font/inter_extrabold"
+        android:textColor="@color/white"
+        android:paddingTop="32dp"
+        android:paddingHorizontal="24dp"
+        android:paddingBottom="8dp" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Create New Appointment"
-        android:textSize="16sp"
-        android:padding="16dp" />
+        android:textSize="14sp"
+        android:fontFamily="@font/inter_medium"
+        android:textColor="#8F8F99"
+        android:paddingHorizontal="24dp"
+        android:paddingBottom="32dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+        
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/buttonadd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_input_add"
+            app:fabCustomSize="80dp"
+            app:maxImageSize="40dp"
+            android:contentDescription="Add"
+            app:backgroundTint="#2952E3"
+            app:tint="@color/white"
+            app:elevation="8dp" />
+            
+        <TextView
+            android:layout_marginTop="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tap to Add"
+            android:textSize="16sp"
+            android:fontFamily="@font/inter_semibold"
+            android:textColor="@color/white" />
+    </LinearLayout>
 
 </LinearLayout>

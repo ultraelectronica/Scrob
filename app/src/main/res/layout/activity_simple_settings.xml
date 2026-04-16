@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
-    tools:context=".MainActivity7">
+    tools:context=".SimpleSettingsActivity">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/top_nav"
@@ -60,6 +60,7 @@
         android:background="@drawable/stroke"
         android:elevation="10dp"
         android:paddingTop="@dimen/_3sdp"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/top_nav">
 
         <LinearLayout

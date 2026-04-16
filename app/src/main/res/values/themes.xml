@@ -1,26 +1,47 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.AppointmentScheduler" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <style name="Base.Theme.AppointmentScheduler" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize your theme here. -->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">#f0f0f0</item>
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="colorPrimary">#e82a2a</item>
-        <item name="colorPrimaryVariant">#b21f1f</item>
-        <item name="colorOnPrimary">#F8F9FA</item>
-        <item name="colorSecondary">#233994</item>
-        <item name="colorSecondaryVariant">#1a2a6c</item>
-        <item name="colorOnSecondary">#000000</item>
-        <item name="colorSurface">#FFFFFF</item>
-        <item name="colorOnBackground">#F0F0F0</item>
-        <item name="colorError">#B00020</item>
-        <item name="colorOnSurface">#000000</item>
+        <item name="android:statusBarColor">#05050A</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="colorPrimary">#2952E3</item>
+        <item name="colorPrimaryVariant">#1d3ab0</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSecondary">#4B4B66</item>
+        <item name="colorSecondaryVariant">#2c2c3e</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+        <item name="colorSurface">#13131A</item>
+        <item name="colorOnBackground">#05050A</item>
+        <item name="colorError">#E84141</item>
+        <item name="colorOnSurface">#FFFFFF</item>
         <item name="colorOnError">#FFFFFF</item>
+        <item name="android:navigationBarColor">#13131A</item>
 
     </style>
 
 
     <style name="Theme.AppointmentScheduler" parent="Base.Theme.AppointmentScheduler" />
+
+    <!-- Transparent sheet surface so custom rounded background shows (no gray panel). -->
+    <style name="ThemeOverlay.App.BottomSheetDialog" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.App.BottomSheet.Modal</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="Widget.App.BottomSheet.Modal" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="backgroundTint">@android:color/transparent</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.App.BottomSheet</item>
+    </style>
+
+    <style name="ShapeAppearance.App.BottomSheet" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">24dp</item>
+        <item name="cornerSizeTopRight">24dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
 
 </resources>
