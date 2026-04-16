@@ -9,6 +9,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "appointments.db";
@@ -151,6 +154,81 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "JOIN " + TABLE_APPOINTMENT_STATUS + " S ON A." + COLUMN_SCHEDID + " = S." + COLUMN_SCHEDID + " " +
                 "WHERE S." + COLUMN_IS_FINISHED + " = 0 " +
                 "ORDER BY A." + COLUMN_DATE + " ASC, A." + COLUMN_TIME + " ASC";
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery(query, null);
+    }
+
+    /**
+     * Upcoming (not finished) appointments, ordered by date/time, limited.
+     */
+    Cursor readUpcomingSchedulesLimit(int limit) {
+        String query = "SELECT A.* FROM " + TABLE_APPOINTMENTS + " A " +
+                "JOIN " + TABLE_APPOINTMENT_STATUS + " S ON A." + COLUMN_SCHEDID + " = S." + COLUMN_SCHEDID + " " +
+                "WHERE S." + COLUMN_IS_FINISHED + " = 0 " +
+                "ORDER BY A." + COLUMN_DATE + " ASC, A." + COLUMN_TIME + " ASC " +
+                "LIMIT " + limit;
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery(query, null);
+    }
+
+    /**
+     * Upcoming appointments on a given calendar day ({@code Date} stored as yyyy-MM-dd).
+     */
+    Cursor readUpcomingAppointmentsForDate(String yyyyMmDd) {
+        String query = "SELECT A.* FROM " + TABLE_APPOINTMENTS + " A " +
+                "JOIN " + TABLE_APPOINTMENT_STATUS + " S ON A." + COLUMN_SCHEDID + " = S." + COLUMN_SCHEDID + " " +
+                "WHERE S." + COLUMN_IS_FINISHED + " = 0 AND A." + COLUMN_DATE + " = ? " +
+                "ORDER BY A." + COLUMN_TIME + " ASC";
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery(query, new String[]{yyyyMmDd});
+    }
+
+    /**
+     * Distinct dates (yyyy-MM-dd) that have at least one upcoming appointment.
+     */
+    public Set<String> getUpcomingAppointmentDates() {
+        HashSet<String> dates = new HashSet<>();
+        String query = "SELECT DISTINCT A." + COLUMN_DATE + " FROM " + TABLE_APPOINTMENTS + " A " +
+                "JOIN " + TABLE_APPOINTMENT_STATUS + " S ON A." + COLUMN_SCHEDID + " = S." + COLUMN_SCHEDID + " " +
+                "WHERE S." + COLUMN_IS_FINISHED + " = 0";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        try {
+            while (cursor.moveToNext()) {
+                dates.add(cursor.getString(0));
+            }
+        } finally {
+            cursor.close();
+        }
+        return dates;
+    }
+
+    public int getPendingScheduleCount() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        int count = 0;
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_APPOINTMENT_STATUS +
+                " WHERE " + COLUMN_IS_FINISHED + " = 0", null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                count = cursor.getInt(0);
+            }
+            cursor.close();
+        }
+        return count;
+    }
+
+    /**
+     * Completed appointments grouped by calendar month (yyyy-MM), up to {@code limit} rows,
+     * most recent months first; use {@link Cursor} column indices 0 = ym, 1 = count.
+     */
+    Cursor readMonthlyCompletedCounts(int limit) {
+        String query = "SELECT strftime('%Y-%m', A." + COLUMN_DATE + ") AS ym, COUNT(*) AS cnt " +
+                "FROM " + TABLE_APPOINTMENTS + " A " +
+                "JOIN " + TABLE_APPOINTMENT_STATUS + " S ON A." + COLUMN_SCHEDID + " = S." + COLUMN_SCHEDID + " " +
+                "WHERE S." + COLUMN_IS_FINISHED + " = 1 " +
+                "GROUP BY ym " +
+                "ORDER BY ym DESC " +
+                "LIMIT " + limit;
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery(query, null);
     }
