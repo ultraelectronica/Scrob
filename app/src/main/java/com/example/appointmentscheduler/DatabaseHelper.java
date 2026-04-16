@@ -323,4 +323,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Toast.makeText(context, "Schedule deleted successfully!", Toast.LENGTH_SHORT).show();
         }
     }
+
+    public Cursor getAllAppointments() {
+        SQLiteDatabase db = getReadableDatabase();
+        String query = "SELECT " + COLUMN_SCHEDID + " as _id, " + COLUMN_NAME + " as title, " + COLUMN_DATE + " as date, " + COLUMN_TIME + " as time, " + COLUMN_LINK + " as location, " + COLUMN_DESCRIPTION + " as description FROM " + TABLE_APPOINTMENTS + " ORDER BY " + COLUMN_DATE + " ASC, " + COLUMN_TIME + " ASC";
+        return db.rawQuery(query, null);
+    }
 }

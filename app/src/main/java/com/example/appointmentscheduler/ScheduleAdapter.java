@@ -1,121 +1,97 @@
 package com.example.appointmentscheduler;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageSwitcher;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.ArrayList;
+import java.util.List;
 
-public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.MyViewHolder> {
+public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder> {
 
     private final Context context;
-    Activity activity;
-    private final ArrayList<String> scheduleId;
-    private final ArrayList<String> schedName;
-    private final ArrayList<String> schedDate;
-    private final ArrayList<String> schedTime;
-    private final ArrayList<String> schedDesc;
-    private final ArrayList<String> schedLink;
-    private final ArrayList<Boolean> schedIsFinish;
+    private List<Appointment> appointments;
+    private OnItemClickListener listener;
 
-    public ScheduleAdapter(Activity activity, Context context, ArrayList<String> scheduleId, ArrayList<String> schedName, ArrayList<String> schedDate,
-                           ArrayList<String> schedTime, ArrayList<String> schedDesc, ArrayList<String> schedLink, ArrayList<Boolean> schedIsFinish) {
-        this.activity = activity;
+    public interface OnItemClickListener {
+        void onItemClick(Appointment appointment);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    public ScheduleAdapter(Context context, List<Appointment> appointments) {
         this.context = context;
-        this.scheduleId = scheduleId;
-        this.schedName = schedName;
-        this.schedTime = schedTime;
-        this.schedDate = schedDate;
-        this.schedDesc = schedDesc;
-        this.schedLink = schedLink;
-        this.schedIsFinish = schedIsFinish;
+        this.appointments = appointments;
+    }
+
+    public ScheduleAdapter(Context context, ArrayList<Appointment> appointments) {
+        this.context = context;
+        this.appointments = appointments;
+    }
+
+    public ScheduleAdapter(Context context, Object activity, ArrayList<String> array_id, ArrayList<String> array_name, ArrayList<String> array_date, ArrayList<String> array_time, ArrayList<String> array_description, ArrayList<String> array_link, ArrayList<Boolean> array_isFinished) {
+        this.context = context;
+        this.appointments = new ArrayList<>();
+        for (int i = 0; i < array_id.size(); i++) {
+            this.appointments.add(new Appointment(
+                Integer.parseInt(array_id.get(i)),
+                array_name.get(i),
+                array_date.get(i),
+                array_time.get(i),
+                array_link.get(i),
+                array_description.get(i)
+            ));
+        }
     }
 
     @NonNull
     @Override
-    public ScheduleAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.recyclerview_row, parent, false);
-        return new MyViewHolder(view);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_appointment, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ScheduleAdapter.MyViewHolder holder, final int position) {
-        String id = scheduleId.get(position);
-        String name = schedName.get(position);
-        String date = schedDate.get(position);
-        String time = schedTime.get(position);
-        String desc = schedDesc.get(position);
-        String link = schedLink.get(position);
-        Boolean finished = schedIsFinish.get(position);
-        holder.schedNameTxt.setText(name);
-        holder.schedDateTxt.setText(date);
-        holder.schedTimeTxt.setText(time);
-        holder.schedDescTxt.setText(desc);
-        holder.schedLinkTxt.setText(link);
-
-//        Debugging purposes
-//        Toast.makeText(context, "SchedID: "+id + "SchedStatus: " + finished, Toast.LENGTH_SHORT ).show();
-
-        Log.d("ScheduleAdapter", "Position: " + position + ", Finished: " + finished);
-
-        if (finished) {
-            holder.checkImg.setVisibility(View.VISIBLE);
-            holder.checkImg.setImageResource(R.drawable.check_on);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Appointment appointment = appointments.get(position);
+        holder.timeText.setText(appointment.getTime());
+        holder.dateText.setText(appointment.getDate());
+        holder.titleText.setText(appointment.getTitle());
+        
+        String location = appointment.getLocation();
+        if (location != null && !location.isEmpty()) {
+            holder.locationText.setText(location);
+            holder.locationText.setVisibility(View.VISIBLE);
         } else {
-            holder.checkImg.setVisibility(View.VISIBLE);
-            holder.checkImg.setImageResource(R.drawable.check_off);
+            holder.locationText.setVisibility(View.GONE);
         }
-
-        holder.rowLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, UpdateActivity.class);
-                intent.putExtra("id", id);
-                intent.putExtra("name", name);
-                intent.putExtra("date", date);
-                intent.putExtra("time", time);
-                intent.putExtra("desc", desc);
-                intent.putExtra("link", link);
-                activity.startActivityForResult(intent, 1);
+        
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(appointment);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return scheduleId.size();
+        return appointments.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
-        public ImageView checkImg;
-        TextView schedNameTxt, schedDateTxt, schedTimeTxt, schedDescTxt, schedLinkTxt;
-        LinearLayout rowLayout;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView timeText, dateText, titleText, locationText;
 
-
-        public MyViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            schedNameTxt = itemView.findViewById(R.id.meetname_tv);
-            schedDateTxt = itemView.findViewById(R.id.date_tv);
-            schedTimeTxt = itemView.findViewById(R.id.time_tv);
-            schedDescTxt = itemView.findViewById(R.id.meetdescription_tv);
-            schedLinkTxt = itemView.findViewById(R.id.meetlink_tv);
-            checkImg = itemView.findViewById(R.id.check_status);
-            rowLayout = itemView.findViewById(R.id.meetingRows);
-
+            timeText = itemView.findViewById(R.id.row_time);
+            dateText = itemView.findViewById(R.id.row_date);
+            titleText = itemView.findViewById(R.id.row_name);
+            locationText = itemView.findViewById(R.id.row_location);
         }
     }
 }
