@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Appointment Scheduler</string>
+    <string name="app_name">Scrob</string>
     <string name="text_home">Welcome!</string>
     <string name="text_view">No appointments yet.</string>
     <string name="text_profile">User Profile</string>
