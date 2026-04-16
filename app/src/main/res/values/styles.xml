@@ -1,5 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="HomeCalendarWeekday">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:fontFamily">@font/inter_medium</item>
+        <item name="android:textColor">@color/ios_label_tertiary</item>
+        <item name="android:textSize">11sp</item>
+    </style>
+
+    <style name="HomeSectionLabel">
+        <item name="android:fontFamily">@font/inter_semibold</item>
+        <item name="android:textColor">@color/ios_label_tertiary</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:letterSpacing">0.06</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="Widget.App.SegmentedButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:minHeight">36dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">@font/inter_semibold</item>
+        <item name="strokeWidth">0dp</item>
+        <item name="rippleColor">@color/ios_ripple</item>
+        <item name="cornerRadius">9dp</item>
+        <item name="backgroundTint">@color/ios_segment_background</item>
+        <item name="android:textColor">@color/ios_segment_text</item>
+    </style>
+
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>

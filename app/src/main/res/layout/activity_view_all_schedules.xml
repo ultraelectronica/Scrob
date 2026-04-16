@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F0F0F0"
-    tools:context=".MainActivity4">
+    tools:context=".ViewAllSchedulesActivity">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/top_nav"

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="appointment_count_short">
+        <item quantity="one">%d appt</item>
+        <item quantity="other">%d appts</item>
+    </plurals>
+</resources>

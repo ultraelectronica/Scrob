@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_screen_gradient">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        android:paddingBottom="104dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="52dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_semibold"
+                android:letterSpacing="-0.02"
+                android:text="@string/home_title"
+                android:textColor="@color/ios_label_primary"
+                android:textSize="34sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:fontFamily="@font/inter_regular"
+                android:lineSpacingMultiplier="1.2"
+                android:text="@string/home_calendar_subtitle"
+                android:textColor="@color/ios_label_secondary"
+                android:textSize="16sp" />
+
+            <TextView
+                style="@style/HomeSectionLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:text="@string/section_calendar" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:cardBackgroundColor="@color/ios_elevated"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/ios_separator"
+                app:strokeWidth="0.5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <com.google.android.material.button.MaterialButtonToggleGroup
+                        android:id="@+id/calendar_mode_toggle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="3dp"
+                        android:background="@drawable/bg_ios_segmented_track"
+                        app:checkedButton="@+id/btn_mode_month"
+                        app:selectionRequired="true"
+                        app:singleSelection="true">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_mode_month"
+                            style="@style/Widget.App.SegmentedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/calendar_mode_month" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_mode_week"
+                            style="@style/Widget.App.SegmentedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/calendar_mode_week" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_mode_agenda"
+                            style="@style/Widget.App.SegmentedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/calendar_mode_agenda" />
+                    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp">
+
+                        <LinearLayout
+                            android:id="@+id/calendar_month_panel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageButton
+                                    android:id="@+id/btn_prev_month"
+                                    android:layout_width="44dp"
+                                    android:layout_height="44dp"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:contentDescription="@string/cd_prev_month"
+                                    android:padding="10dp"
+                                    android:src="@drawable/ic_chevron_left_ios" />
+
+                                <TextView
+                                    android:id="@+id/text_month_year"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/inter_semibold"
+                                    android:gravity="center"
+                                    android:textColor="@color/ios_label_primary"
+                                    android:textSize="17sp"
+                                    tools:text="April 2026" />
+
+                                <ImageButton
+                                    android:id="@+id/btn_next_month"
+                                    android:layout_width="44dp"
+                                    android:layout_height="44dp"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:contentDescription="@string/cd_next_month"
+                                    android:padding="10dp"
+                                    android:src="@drawable/ic_chevron_right_ios" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    style="@style/HomeCalendarWeekday"
+                                    android:text="@string/dow_sun" />
+
+                                <TextView
+                                    style="@style/HomeCalendarWeekday"
+                                    android:text="@string/dow_mon" />
+
+                                <TextView
+                                    style="@style/HomeCalendarWeekday"
+                                    android:text="@string/dow_tue" />
+
+                                <TextView
+                                    style="@style/HomeCalendarWeekday"
+                                    android:text="@string/dow_wed" />
+
+                                <TextView
+                                    style="@style/HomeCalendarWeekday"
+                                    android:text="@string/dow_thu" />
+
+                                <TextView
+                                    style="@style/HomeCalendarWeekday"
+                                    android:text="@string/dow_fri" />
+
+                                <TextView
+                                    style="@style/HomeCalendarWeekday"
+                                    android:text="@string/dow_sat" />
+                            </LinearLayout>
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/calendar_recycler"
+                                android:layout_width="match_parent"
+                                android:layout_height="280dp"
+                                android:layout_marginTop="6dp"
+                                android:nestedScrollingEnabled="false"
+                                android:overScrollMode="never" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/calendar_week_panel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageButton
+                                    android:id="@+id/btn_prev_week"
+                                    android:layout_width="44dp"
+                                    android:layout_height="44dp"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:contentDescription="@string/cd_prev_week"
+                                    android:padding="10dp"
+                                    android:src="@drawable/ic_chevron_left_ios" />
+
+                                <TextView
+                                    android:id="@+id/text_week_range"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:fontFamily="@font/inter_semibold"
+                                    android:gravity="center"
+                                    android:textColor="@color/ios_label_primary"
+                                    android:textSize="15sp"
+                                    tools:text="Apr 14 – Apr 20" />
+
+                                <ImageButton
+                                    android:id="@+id/btn_next_week"
+                                    android:layout_width="44dp"
+                                    android:layout_height="44dp"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:contentDescription="@string/cd_next_week"
+                                    android:padding="10dp"
+                                    android:src="@drawable/ic_chevron_right_ios" />
+                            </LinearLayout>
+
+                            <HorizontalScrollView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:fillViewport="true"
+                                android:scrollbars="none">
+
+                                <LinearLayout
+                                    android:id="@+id/week_days_row"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal" />
+                            </HorizontalScrollView>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/calendar_agenda_panel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/agenda_recycler"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:minHeight="200dp"
+                                android:nestedScrollingEnabled="false"
+                                android:overScrollMode="never" />
+                        </LinearLayout>
+                    </FrameLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                style="@style/HomeSectionLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:text="@string/section_next_appointments" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:cardBackgroundColor="@color/ios_elevated"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/ios_separator"
+                app:strokeWidth="0.5dp">
+
+                <LinearLayout
+                    android:id="@+id/recent_list_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingVertical="4dp" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/text_recent_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:fontFamily="@font/inter_regular"
+                android:gravity="center"
+                android:paddingVertical="8dp"
+                android:text="@string/no_upcoming_appointments"
+                android:textColor="@color/ios_label_tertiary"
+                android:textSize="15sp"
+                android:visibility="gone" />
+
+            <TextView
+                style="@style/HomeSectionLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:text="@string/section_statistics" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:cardBackgroundColor="@color/ios_elevated"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/ios_separator"
+                app:strokeWidth="0.5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="18dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_semibold"
+                        android:text="@string/stats_preview_title"
+                        android:textColor="@color/ios_label_primary"
+                        android:textSize="20sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <com.example.appointmentscheduler.SimplePieChartView
+                            android:id="@+id/stats_pie_preview"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="18dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/stats_summary_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/inter_regular"
+                                android:lineSpacingMultiplier="1.15"
+                                android:textColor="@color/ios_label_secondary"
+                                android:textSize="15sp"
+                                tools:text="12 of 20 completed" />
+
+                            <ProgressBar
+                                android:id="@+id/stats_progress_bar"
+                                style="@android:style/Widget.ProgressBar.Horizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="8dp"
+                                android:layout_marginTop="10dp"
+                                android:max="100"
+                                android:progress="60"
+                                android:progressDrawable="@drawable/stats_progress_drawable" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:fontFamily="@font/inter_regular"
+                        android:text="@string/stats_monthly_hint"
+                        android:textColor="@color/ios_label_tertiary"
+                        android:textSize="12sp" />
+
+                    <LinearLayout
+                        android:id="@+id/stats_mini_bars"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="8dp"
+                        android:gravity="bottom"
+                        android:orientation="horizontal"
+                        tools:ignore="DisableBaselineAlignment" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_open_statistics"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="@font/inter_semibold"
+                        android:text="@string/view_full_statistics"
+                        android:textColor="@color/ios_accent" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="22dp"
+        android:contentDescription="@string/cd_add_appointment"
+        android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="@color/ios_accent"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        app:pressedTranslationZ="8dp"
+        app:tint="@color/white" />
+</FrameLayout>

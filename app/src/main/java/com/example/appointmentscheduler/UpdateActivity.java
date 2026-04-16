@@ -1,310 +1,284 @@
 package com.example.appointmentscheduler;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.switchmaterial.SwitchMaterial;
+
+import java.util.Calendar;
+import java.util.Locale;
 
 public class UpdateActivity extends AppCompatActivity {
 
-    TextView sched_date_txt, sched_time_txt;
-    EditText sched_name_txt, sched_desc_txt, sched_link_txt;
-    Button date_picker_btn, time_picker_btn, save_btn, back_btn;
-    @SuppressLint("UseSwitchCompatOrMaterialCode")
-    Switch edit_switch;
-    ImageButton delete_btn;
-    CheckBox isFinishedCheckbox;
-    String id, name, date, time, desc, link;
-    DatabaseHelper dbHelper;
+    private TextView schedDateTxt;
+    private TextView schedTimeTxt;
+    private EditText schedNameTxt;
+    private EditText schedDescTxt;
+    private EditText schedLinkTxt;
+    private MaterialButton datePickerBtn;
+    private MaterialButton timePickerBtn;
+    private MaterialButton saveBtn;
+    private SwitchMaterial editSwitch;
+    private MaterialCheckBox isFinishedCheckbox;
 
-    @SuppressLint("MissingInflatedId")
+    private String id;
+    private String name;
+    private String date;
+    private String time;
+    private String desc;
+    private String link;
+
+    private DatabaseHelper dbHelper;
+    private CompoundButton.OnCheckedChangeListener finishedListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_update);
 
-        dbHelper = new DatabaseHelper(UpdateActivity.this);
+        dbHelper = new DatabaseHelper(this);
 
-        sched_date_txt = findViewById(R.id.dateText2);
-        sched_time_txt = findViewById(R.id.timeText2);
-
-        sched_name_txt = findViewById(R.id.nameSet2);
-        sched_desc_txt = findViewById(R.id.descriptionSet2);
-        sched_link_txt = findViewById(R.id.linkSet2);
-
-        date_picker_btn = findViewById(R.id.datePicker2);
-        time_picker_btn = findViewById(R.id.timePicker2);
-        back_btn = findViewById(R.id.btn_back);
-
-        edit_switch = findViewById(R.id.edit_toggle);
-
-        save_btn = findViewById(R.id.saveEditSchedButton);
-
-        delete_btn = findViewById(R.id.deleteButton);
-
+        schedDateTxt = findViewById(R.id.dateText2);
+        schedTimeTxt = findViewById(R.id.timeText2);
+        schedNameTxt = findViewById(R.id.nameSet2);
+        schedDescTxt = findViewById(R.id.descriptionSet2);
+        schedLinkTxt = findViewById(R.id.linkSet2);
+        datePickerBtn = findViewById(R.id.datePicker2);
+        timePickerBtn = findViewById(R.id.timePicker2);
+        saveBtn = findViewById(R.id.saveEditSchedButton);
+        editSwitch = findViewById(R.id.edit_toggle);
         isFinishedCheckbox = findViewById(R.id.checkFinish);
 
-        //Execute Intent (setting/getting values of clicked schedule)
-        getIntentData();
+        final MaterialToolbar toolbar = findViewById(R.id.toolbar_update);
+        toolbar.setNavigationOnClickListener(v -> finish());
+        toolbar.inflateMenu(R.menu.menu_appointment_detail);
+        toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.action_delete_appointment) {
+                confirmDeleteDialog();
+                return true;
+            }
+            return false;
+        });
 
-        //DB PREPARATION
-        dbHelper = new DatabaseHelper(UpdateActivity.this);
+        if (!getIntent().hasExtra("id")) {
+            Toast.makeText(this, R.string.error_appointment_missing, Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        id = getIntent().getStringExtra("id");
 
-        //Disable EditText, Button, Time/Date Picker
-        disableEditText(sched_name_txt, sched_desc_txt, sched_link_txt);
+        finishedListener = (buttonView, isChecked) ->
+                dbHelper.updateAppointmentStatus(id, isChecked);
+
+        if (!loadAppointmentFromDatabase()) {
+            return;
+        }
+
+        disableEditText(schedNameTxt, schedDescTxt, schedLinkTxt);
         disableSave();
         disableTimeDatePicker();
 
-
-        edit_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    enableSave();
-                    enableTimeDatePicker();
-                    enableEditText(sched_name_txt, sched_desc_txt, sched_link_txt);
-                    disableDelete();
-                } else {
-                    //Disable EditText, Button, Time/Date Picker
-                    disableEditText(sched_name_txt, sched_desc_txt, sched_link_txt);
-                    disableSave();
-                    enableDelete();
-                    disableTimeDatePicker();
-                    getIntentData();
+        editSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            android.view.MenuItem deleteItem = toolbar.getMenu().findItem(R.id.action_delete_appointment);
+            if (isChecked) {
+                enableSave();
+                enableTimeDatePicker();
+                enableEditText(schedNameTxt, schedDescTxt, schedLinkTxt);
+                if (deleteItem != null) {
+                    deleteItem.setVisible(false);
                 }
+            } else {
+                disableEditText(schedNameTxt, schedDescTxt, schedLinkTxt);
+                disableSave();
+                if (deleteItem != null) {
+                    deleteItem.setVisible(true);
+                }
+                disableTimeDatePicker();
+                loadAppointmentFromDatabase();
             }
         });
 
-        back_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
+        saveBtn.setOnClickListener(v -> {
+            name = schedNameTxt.getText().toString();
+            date = schedDateTxt.getText().toString();
+            time = schedTimeTxt.getText().toString();
+            desc = schedDescTxt.getText().toString();
+            link = schedLinkTxt.getText().toString();
+            boolean isFinished = isFinishedCheckbox.isChecked();
+
+            dbHelper.updateSchedule(id, name, date, time, desc, link);
+            dbHelper.updateAppointmentStatus(id, isFinished);
+
+            finish();
         });
 
-        delete_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //confirmation dialog
-                confirmDeleteDialog();
-            }
-        });
-
-        date_picker_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dateDialog();
-            }
-        });
-
-        time_picker_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                timeDialog();
-            }
-        });
-
-        save_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //Saves contents from text fields to string values
-                name = sched_name_txt.getText().toString();
-                date = sched_date_txt.getText().toString();
-                time = sched_time_txt.getText().toString();
-                desc = sched_desc_txt.getText().toString();
-                link = sched_link_txt.getText().toString();
-                boolean isFinished = isFinishedCheckbox.isChecked();
-
-                dbHelper.updateSchedule(id, name, date, time, desc, link);
-                dbHelper.updateAppointmentStatus(id, isFinished);
-
-                finish();
-            }
-        });
-
-        isFinishedCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                dbHelper.updateAppointmentStatus(id, isChecked);
-            }
-        });
-
+        datePickerBtn.setOnClickListener(v -> showDateDialog());
+        timePickerBtn.setOnClickListener(v -> showTimeDialog());
     }
 
-    void getIntentData() {
-        if(getIntent().hasExtra("id" ) && getIntent().hasExtra("name" ) &&
-                getIntent().hasExtra("date" ) && getIntent().hasExtra("time" ) &&
-                getIntent().hasExtra("desc" ) && getIntent().hasExtra("link" )) {
-
-            //Getting the values from Intent
-            id = getIntent().getStringExtra("id");
-            name = getIntent().getStringExtra("name");
-            date = getIntent().getStringExtra("date");
-            time = getIntent().getStringExtra("time");
-            desc = getIntent().getStringExtra("desc");
-            link = getIntent().getStringExtra("link");
-
-            //Setting Intent datas
-            sched_name_txt.setText(name);
-            sched_date_txt.setText(date);
-            sched_time_txt.setText(time);
-            sched_desc_txt.setText(desc);
-            sched_link_txt.setText(link);
-
-            boolean isFinished = dbHelper.isAppointmentFinished(id);
-            isFinishedCheckbox.setChecked(isFinished);
-
-        } else {
-            Toast.makeText(this, "Error in finding this card view.", Toast.LENGTH_SHORT).show();
+    @SuppressLint("Range")
+    private boolean loadAppointmentFromDatabase() {
+        Cursor c = dbHelper.queryAppointmentBySchedId(id);
+        if (c == null || !c.moveToFirst()) {
+            Toast.makeText(this, R.string.error_appointment_missing, Toast.LENGTH_SHORT).show();
+            finish();
+            return false;
         }
-    }
-
-    private void disableEditText(EditText name_txt, EditText desc_txt, EditText link_txt) {
-
-        //meet_name_txt
-        name_txt.setFocusable(false);
-        name_txt.setFocusableInTouchMode(false);
-        name_txt.setClickable(false);
-        name_txt.setLongClickable(false);
-
-        //meet_desc_txt
-        desc_txt.setFocusable(false);
-        desc_txt.setFocusableInTouchMode(false);
-        desc_txt.setClickable(false);
-        desc_txt.setLongClickable(false);
-
-        //meet_link_txt
-        link_txt.setFocusable(false);
-        link_txt.setFocusableInTouchMode(false);
-        link_txt.setClickable(false);
-        link_txt.setLongClickable(false);
-
-    }
-
-    private void enableEditText(EditText name_txt, EditText desc_txt, EditText link_txt) {
-
-        //meet_name_txt
-        name_txt.setFocusable(true);
-        name_txt.setFocusableInTouchMode(true);
-        name_txt.setClickable(true);
-        name_txt.setLongClickable(true);
-
-        //meet_desc_txt
-        desc_txt.setFocusable(true);
-        desc_txt.setFocusableInTouchMode(true);
-        desc_txt.setClickable(true);
-        desc_txt.setLongClickable(true);
-
-        //meet_link_txt
-        link_txt.setFocusable(true);
-        link_txt.setFocusableInTouchMode(true);
-        link_txt.setClickable(true);
-        link_txt.setLongClickable(true);
-    }
-    void disableTimeDatePicker() {
-        date_picker_btn.setVisibility(View.GONE);
-        time_picker_btn.setVisibility(View.GONE);
-    }
-    void enableTimeDatePicker() {
-        date_picker_btn.setVisibility(View.VISIBLE);
-        time_picker_btn.setVisibility(View.VISIBLE);
-    }
-
-    void disableSave() {
-        save_btn.setVisibility(View.GONE);
-    }
-    void enableSave() {
-        save_btn.setVisibility(View.VISIBLE);
-    }
-
-    void disableDelete() {
-        delete_btn.setVisibility(View.GONE);
-    }
-    void enableDelete() {
-        delete_btn.setVisibility(View.VISIBLE);
-    }
-
-    private void dateDialog() {
-
-        TextView dateText = findViewById(R.id.dateText2);
-
-        DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                String formattedMonth = String.format("%02d", month + 1);
-                String formattedDay = String.format("%02d", day);
-
-                dateText.setText(year + "-" + formattedMonth + "-" + formattedDay);
+        try {
+            name = c.getString(c.getColumnIndexOrThrow(DatabaseHelper.COLUMN_NAME));
+            if (name == null) {
+                name = "";
             }
-        }, 2024, 0, 1);
+            date = c.getString(c.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DATE));
+            if (date == null) {
+                date = "";
+            }
+            time = c.getString(c.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TIME));
+            if (time == null) {
+                time = "";
+            }
+            desc = c.getString(c.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DESCRIPTION));
+            if (desc == null) {
+                desc = "";
+            }
+            link = c.getString(c.getColumnIndexOrThrow(DatabaseHelper.COLUMN_LINK));
+            if (link == null) {
+                link = "";
+            }
+        } finally {
+            c.close();
+        }
+
+        schedNameTxt.setText(name);
+        schedDateTxt.setText(date);
+        schedTimeTxt.setText(time);
+        schedDescTxt.setText(desc);
+        schedLinkTxt.setText(link);
+
+        boolean isFinished = dbHelper.isAppointmentFinished(id);
+        isFinishedCheckbox.setOnCheckedChangeListener(null);
+        isFinishedCheckbox.setChecked(isFinished);
+        isFinishedCheckbox.setOnCheckedChangeListener(finishedListener);
+        return true;
+    }
+
+    private void enableEditText(EditText nameTxt, EditText descTxt, EditText linkTxt) {
+        nameTxt.setFocusable(true);
+        nameTxt.setFocusableInTouchMode(true);
+        nameTxt.setClickable(true);
+        nameTxt.setLongClickable(true);
+        descTxt.setFocusable(true);
+        descTxt.setFocusableInTouchMode(true);
+        descTxt.setClickable(true);
+        descTxt.setLongClickable(true);
+        linkTxt.setFocusable(true);
+        linkTxt.setFocusableInTouchMode(true);
+        linkTxt.setClickable(true);
+        linkTxt.setLongClickable(true);
+    }
+
+    private void disableEditText(EditText nameTxt, EditText descTxt, EditText linkTxt) {
+        nameTxt.setFocusable(false);
+        nameTxt.setFocusableInTouchMode(false);
+        nameTxt.setClickable(false);
+        nameTxt.setLongClickable(false);
+        descTxt.setFocusable(false);
+        descTxt.setFocusableInTouchMode(false);
+        descTxt.setClickable(false);
+        descTxt.setLongClickable(false);
+        linkTxt.setFocusable(false);
+        linkTxt.setFocusableInTouchMode(false);
+        linkTxt.setClickable(false);
+        linkTxt.setLongClickable(false);
+    }
+
+    private void disableTimeDatePicker() {
+        datePickerBtn.setVisibility(View.GONE);
+        timePickerBtn.setVisibility(View.GONE);
+    }
+
+    private void enableTimeDatePicker() {
+        datePickerBtn.setVisibility(View.VISIBLE);
+        timePickerBtn.setVisibility(View.VISIBLE);
+    }
+
+    private void disableSave() {
+        saveBtn.setVisibility(View.GONE);
+    }
+
+    private void enableSave() {
+        saveBtn.setVisibility(View.VISIBLE);
+    }
+
+    private void showDateDialog() {
+        Calendar cal = Calendar.getInstance();
+        @Nullable String current = schedDateTxt.getText() != null ? schedDateTxt.getText().toString() : null;
+        if (current != null && current.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            try {
+                String[] p = current.split("-");
+                cal.set(Calendar.YEAR, Integer.parseInt(p[0]));
+                cal.set(Calendar.MONTH, Integer.parseInt(p[1]) - 1);
+                cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(p[2]));
+            } catch (Exception ignored) {
+                // keep today
+            }
+        }
+        DatePickerDialog dialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
+            String formattedMonth = String.format(Locale.US, "%02d", month + 1);
+            String formattedDay = String.format(Locale.US, "%02d", dayOfMonth);
+            schedDateTxt.setText(year + "-" + formattedMonth + "-" + formattedDay);
+        }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
         dialog.show();
     }
-    private void timeDialog() {
 
-        TextView timeText = findViewById(R.id.timeText2);
-
-        TimePickerDialog dialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int hours, int minutes) {
-                String amPm;
-                if (hours >= 12) {
-                    amPm = "PM";
-                    if (hours > 12) {
-                        hours -= 12;
-                    }
-                } else {
-                    amPm = "AM";
-                    if (hours == 0) {
-                        hours = 12;
-                    }
+    private void showTimeDialog() {
+        Calendar cal = Calendar.getInstance();
+        TimePickerDialog dialog = new TimePickerDialog(this, (view, hourOfDay, minute) -> {
+            int hours = hourOfDay;
+            String amPm;
+            if (hours >= 12) {
+                amPm = "PM";
+                if (hours > 12) {
+                    hours -= 12;
                 }
-
-                // Format the minutes to always have two digits
-                String formattedMinutes = String.format("%02d", minutes);
-
-                timeText.setText(String.format("%d:%s %s", hours, formattedMinutes, amPm));
+            } else {
+                amPm = "AM";
+                if (hours == 0) {
+                    hours = 12;
+                }
             }
-        }, 12, 00, false);
+            String formattedMinutes = String.format(Locale.US, "%02d", minute);
+            schedTimeTxt.setText(String.format(Locale.US, "%d:%s %s", hours, formattedMinutes, amPm));
+        }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), false);
         dialog.show();
     }
-    private void confirmDeleteDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Delete " + name + " ?");
-        builder.setMessage("Are you sure you want to delete?");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dbHelper = new DatabaseHelper(UpdateActivity.this);
-                dbHelper.deleteRowSchedule(id);
-                dbHelper.deleteAppointmentStatus(id);
 
-                finish();
-            }
-        });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-        builder.create().show();
+    private void confirmDeleteDialog() {
+        String titleName = name != null && !name.isEmpty() ? name : getString(R.string.appointment_detail_title);
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(getString(R.string.appointment_delete_confirm_title, titleName))
+                .setMessage(R.string.appointment_delete_confirm_message)
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(R.string.appointment_delete, (dialog, which) -> {
+                    dbHelper.deleteRowSchedule(id);
+                    dbHelper.deleteAppointmentStatus(id);
+                    finish();
+                })
+                .show();
     }
 }

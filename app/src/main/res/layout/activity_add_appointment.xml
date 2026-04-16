@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f0f0f0"
-    tools:context=".MainActivity2">
+    tools:context=".AddAppointmentActivity">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/top_nav"

@@ -27,6 +27,15 @@
             android:textSize="16sp"
             android:textColor="@color/white"/>
 
+        <View
+            android:id="@+id/appointmentDot"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/dot_appointment"
+            android:visibility="gone" />
+
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

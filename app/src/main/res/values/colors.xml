@@ -16,5 +16,24 @@
     <color name="navBarBackground">#F8F9FA</color>
     <color name="textColor">#000000</color>
     <color name="menu_icons_color">#404040</color>
+    <color name="light_gray">#E0E0E0</color>
+    <color name="dark_gray">#424242</color>
+    <color name="gray">#9E9E9E</color>
+    <color name="teal">#009688</color>
+
+    <!-- Apple-inspired dark UI (iOS system colors, dark mode) -->
+    <color name="ios_bg">#000000</color>
+    <color name="ios_bg_gradient_top">#0C0C0E</color>
+    <color name="ios_elevated">#1C1C1E</color>
+    <color name="ios_surface_secondary">#2C2C2E</color>
+    <color name="ios_surface_tertiary">#3A3A3C</color>
+    <color name="ios_separator">#38383A</color>
+    <color name="ios_separator_opaque">#545458</color>
+    <color name="ios_label_primary">#FFFFFF</color>
+    <color name="ios_label_secondary">#AEAEB2</color>
+    <color name="ios_label_tertiary">#636366</color>
+    <color name="ios_accent">#0A84FF</color>
+    <color name="ios_tab_bar">#161618</color>
+    <color name="ios_ripple">#30FFFFFF</color>
 
 </resources>
