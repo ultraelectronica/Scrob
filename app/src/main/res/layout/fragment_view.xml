@@ -1,58 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_screen_gradient">
+    android:orientation="vertical"
+    android:background="@drawable/bg_screen_gradient"
+    android:paddingHorizontal="20dp"
+    android:paddingTop="52dp"
+    android:paddingBottom="104dp"
+    android:clipToPadding="false">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="View Appointments"
-            android:textSize="34sp"
-            android:fontFamily="@font/inter_semibold"
-            android:letterSpacing="-0.02"
-            android:textColor="@color/ios_label_primary"
-            android:paddingTop="48dp"
-            android:paddingHorizontal="20dp"
-            android:paddingBottom="8dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/text_view"
-            android:textSize="16sp"
-            android:fontFamily="@font/inter_regular"
-            android:textColor="@color/ios_label_secondary"
-            android:paddingHorizontal="20dp"
-            android:paddingBottom="16dp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list_appointments"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:paddingHorizontal="16dp"
-            android:clipToPadding="false"
-            android:paddingTop="8dp"
-            android:paddingBottom="88dp" />
-    </LinearLayout>
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:background="@drawable/bg_ios_view_accent_line"
+        android:contentDescription="@null"
+        android:importantForAccessibility="no" />
 
     <TextView
-        android:id="@+id/empty_text"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="No appointments scheduled.\nTap + to add your first appointment."
-        android:textSize="16sp"
-        android:fontFamily="@font/inter_regular"
-        android:textColor="@color/ios_label_secondary"
-        android:visibility="gone"
-        android:paddingHorizontal="20dp"
-        android:layout_marginTop="120dp" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/inter_semibold"
+        android:letterSpacing="-0.02"
+        android:text="@string/view_appointments_title"
+        android:textColor="@color/ios_label_primary"
+        android:textSize="34sp" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/text_view_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:fontFamily="@font/inter_regular"
+        android:lineSpacingMultiplier="1.2"
+        android:text="@string/view_appointments_subtitle_hint"
+        android:textColor="@color/ios_label_secondary"
+        android:textSize="16sp"
+        tools:text="12 appointments" />
+
+    <TextView
+        style="@style/HomeSectionLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/section_view_list" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        app:cardBackgroundColor="@color/ios_elevated"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
+        app:rippleColor="@color/ios_ripple"
+        app:strokeColor="@color/ios_separator"
+        app:strokeWidth="0.5dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/list_appointments"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:overScrollMode="never"
+                android:paddingHorizontal="10dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:scrollbars="vertical" />
+
+            <LinearLayout
+                android:id="@+id/empty_state"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="32dp"
+                android:visibility="gone">
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="14dp"
+                    android:background="@drawable/bg_ios_icon_circle_soft">
+
+                    <ImageView
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/empty_calendar"
+                        app:tint="@color/ios_accent" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/empty_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/inter_semibold"
+                    android:gravity="center"
+                    android:lineSpacingMultiplier="1.2"
+                    android:text="@string/view_empty_message"
+                    android:textColor="@color/ios_label_primary"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/inter_regular"
+                    android:gravity="center"
+                    android:text="@string/view_empty_secondary"
+                    android:textColor="@color/ios_label_tertiary"
+                    android:textSize="15sp" />
+            </LinearLayout>
+        </FrameLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/pagination_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="@color/ios_elevated"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:rippleColor="@color/ios_ripple"
+        app:strokeColor="@color/ios_separator"
+        app:strokeWidth="0.5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="4dp"
+            android:paddingVertical="4dp">
+
+            <ImageButton
+                android:id="@+id/btn_page_prev"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/cd_prev_page"
+                android:src="@drawable/ic_chevron_left_ios"
+                app:tint="@color/ios_accent" />
+
+            <TextView
+                android:id="@+id/text_page_indicator"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/inter_medium"
+                android:gravity="center"
+                android:letterSpacing="0.02"
+                android:textColor="@color/ios_label_secondary"
+                android:textSize="14sp"
+                tools:text="Page 1 of 3" />
+
+            <ImageButton
+                android:id="@+id/btn_page_next"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/cd_next_page"
+                android:src="@drawable/ic_chevron_right_ios"
+                app:tint="@color/ios_accent" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>
