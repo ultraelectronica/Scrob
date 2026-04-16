@@ -324,9 +324,48 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * All rows from {@link #TABLE_APPOINTMENTS}, ordered by date and time.
+     * Prefer {@link #getAppointmentsPage(int, int)} for UI lists to avoid loading large cursors.
+     */
     public Cursor getAllAppointments() {
         SQLiteDatabase db = getReadableDatabase();
-        String query = "SELECT " + COLUMN_SCHEDID + " as _id, " + COLUMN_NAME + " as title, " + COLUMN_DATE + " as date, " + COLUMN_TIME + " as time, " + COLUMN_LINK + " as location, " + COLUMN_DESCRIPTION + " as description FROM " + TABLE_APPOINTMENTS + " ORDER BY " + COLUMN_DATE + " ASC, " + COLUMN_TIME + " ASC";
-        return db.rawQuery(query, null);
+        return db.query(TABLE_APPOINTMENTS, null, null, null, null, null,
+                COLUMN_DATE + " ASC, " + COLUMN_TIME + " ASC");
+    }
+
+    /**
+     * Paged appointments (same order as {@link #getAllAppointments()}).
+     */
+    public Cursor getAppointmentsPage(int limit, int offset) {
+        SQLiteDatabase db = getReadableDatabase();
+        String sql = "SELECT * FROM " + TABLE_APPOINTMENTS + " ORDER BY " + COLUMN_DATE + " ASC, "
+                + COLUMN_TIME + " ASC LIMIT ? OFFSET ?";
+        return db.rawQuery(sql, new String[]{String.valueOf(limit), String.valueOf(offset)});
+    }
+
+    public int getAppointmentTableCount() {
+        SQLiteDatabase db = getReadableDatabase();
+        int count = 0;
+        Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_APPOINTMENTS, null);
+        if (cursor != null) {
+            try {
+                if (cursor.moveToFirst()) {
+                    count = cursor.getInt(0);
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Single appointment row by {@link #COLUMN_SCHEDID}, or empty cursor if missing.
+     */
+    public Cursor queryAppointmentBySchedId(String schedId) {
+        SQLiteDatabase db = getReadableDatabase();
+        return db.query(TABLE_APPOINTMENTS, null, COLUMN_SCHEDID + " = ?",
+                new String[]{schedId}, null, null, null);
     }
 }

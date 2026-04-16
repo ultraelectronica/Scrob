@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -13,12 +14,18 @@ import java.util.List;
 
 class HomeAgendaAdapter extends RecyclerView.Adapter<HomeAgendaAdapter.Holder> {
 
+    interface OnAgendaItemClickListener {
+        void onAgendaItemClick(long schedId);
+    }
+
     static class Item {
+        final long schedId;
         final String name;
         final String date;
         final String time;
 
-        Item(String name, String date, String time) {
+        Item(long schedId, String name, String date, String time) {
+            this.schedId = schedId;
             this.name = name;
             this.date = date;
             this.time = time;
@@ -26,6 +33,12 @@ class HomeAgendaAdapter extends RecyclerView.Adapter<HomeAgendaAdapter.Holder> {
     }
 
     private final List<Item> items = new ArrayList<>();
+    @Nullable
+    private OnAgendaItemClickListener itemClickListener;
+
+    void setOnAgendaItemClickListener(@Nullable OnAgendaItemClickListener listener) {
+        this.itemClickListener = listener;
+    }
 
     void setItems(List<Item> newItems) {
         items.clear();
@@ -49,6 +62,11 @@ class HomeAgendaAdapter extends RecyclerView.Adapter<HomeAgendaAdapter.Holder> {
         holder.date.setText(it.date);
         holder.name.setText(it.name);
         holder.divider.setVisibility(position == getItemCount() - 1 ? View.GONE : View.VISIBLE);
+        holder.itemView.setOnClickListener(v -> {
+            if (itemClickListener != null) {
+                itemClickListener.onAgendaItemClick(it.schedId);
+            }
+        });
     }
 
     @Override

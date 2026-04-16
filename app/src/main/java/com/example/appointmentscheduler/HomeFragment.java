@@ -101,6 +101,7 @@ public class HomeFragment extends Fragment {
 
         agendaRecycler = view.findViewById(R.id.agenda_recycler);
         agendaAdapter = new HomeAgendaAdapter();
+        agendaAdapter.setOnAgendaItemClickListener(schedId -> openAppointmentDetail(String.valueOf(schedId)));
         agendaRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
         agendaRecycler.setAdapter(agendaAdapter);
         agendaRecycler.setNestedScrollingEnabled(false);
@@ -171,6 +172,12 @@ public class HomeFragment extends Fragment {
         bottomSheet.show(getParentFragmentManager(), "add_appointment_bottom_sheet");
     }
 
+    private void openAppointmentDetail(String schedId) {
+        Intent intent = new Intent(requireContext(), UpdateActivity.class);
+        intent.putExtra("id", schedId);
+        startActivity(intent);
+    }
+
     private void reloadAll() {
         upcomingDatesCache = dbHelper.getUpcomingAppointmentDates();
         refreshMonthCalendar();
@@ -219,11 +226,14 @@ public class HomeFragment extends Fragment {
 
     private void showAppointmentsForDateDialog(String ymd) {
         ArrayList<String> lines = new ArrayList<>();
+        ArrayList<Long> ids = new ArrayList<>();
         Cursor cursor = dbHelper.readUpcomingAppointmentsForDate(ymd);
         try {
             while (cursor.moveToNext()) {
+                long sid = cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SCHEDID));
                 String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_NAME));
                 String time = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TIME));
+                ids.add(sid);
                 lines.add(time + " — " + name);
             }
         } finally {
@@ -240,7 +250,8 @@ public class HomeFragment extends Fragment {
         }
         new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(title)
-                .setItems(lines.toArray(new String[0]), null)
+                .setItems(lines.toArray(new String[0]), (dialog, which) ->
+                        openAppointmentDetail(String.valueOf(ids.get(which))))
                 .setPositiveButton(android.R.string.ok, null)
                 .show();
     }
@@ -298,10 +309,11 @@ public class HomeFragment extends Fragment {
         Cursor cursor = dbHelper.readUpcomingSchedulesLimit(AGENDA_LIMIT);
         try {
             while (cursor.moveToNext()) {
+                long sid = cursor.getLong(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SCHEDID));
                 String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_NAME));
                 String date = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DATE));
                 String time = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_TIME));
-                items.add(new HomeAgendaAdapter.Item(name, date, time));
+                items.add(new HomeAgendaAdapter.Item(sid, name, date, time));
             }
         } finally {
             cursor.close();
@@ -318,6 +330,7 @@ public class HomeFragment extends Fragment {
         int count = 0;
         try {
             while (cursor.moveToNext()) {
+                long sid = cursor.getLong(cursor.getColumnIndex(DatabaseHelper.COLUMN_SCHEDID));
                 String name = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME));
                 String date = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_DATE));
                 String time = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_TIME));
@@ -326,6 +339,7 @@ public class HomeFragment extends Fragment {
                 ((TextView) row.findViewById(R.id.row_time)).setText(time);
                 ((TextView) row.findViewById(R.id.row_date)).setText(date);
                 ((TextView) row.findViewById(R.id.row_name)).setText(name);
+                row.setOnClickListener(v -> openAppointmentDetail(String.valueOf(sid)));
                 recentListContainer.addView(row);
                 count++;
             }
