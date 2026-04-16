@@ -40,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
         if (itemId == R.id.home) {
             fragment = new HomeFragment();
         } else if (itemId == R.id.add_schedule) {
-            fragment = new AddFragment();
+            showAddAppointmentBottomSheet();
+            return;
         } else if (itemId == R.id.profile) {
             fragment = new ProfileFragment();
         } else if (itemId == R.id.view) {
@@ -54,5 +55,18 @@ public class MainActivity extends AppCompatActivity {
             ft.replace(R.id.fragment_container, fragment);
             ft.commit();
         }
+    }
+
+    private void showAddAppointmentBottomSheet() {
+        AddAppointmentBottomSheet bottomSheet = new AddAppointmentBottomSheet();
+        bottomSheet.setOnAppointmentAddedListener(() -> {
+            Fragment activeFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            if (activeFragment instanceof HomeFragment) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new HomeFragment())
+                        .commit();
+            }
+        });
+        bottomSheet.show(getSupportFragmentManager(), "add_appointment_bottom_sheet");
     }
 }

@@ -9,9 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "appointments.db";
@@ -233,6 +230,49 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 " ORDER BY A." + COLUMN_DATE + " ASC, A." + COLUMN_TIME + " ASC";
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery(query, null);
+    }
+
+    Cursor readUpcomingScheduleByUser(String username) {
+        String query = "SELECT A.* FROM " + TABLE_APPOINTMENTS + " A " +
+                "JOIN " + TABLE_APPOINTMENT_STATUS + " S ON A." + COLUMN_SCHEDID + " = S." + COLUMN_SCHEDID + " " +
+                "WHERE S." + COLUMN_USERNAME + " = ? AND S." + COLUMN_IS_FINISHED + " = 0 " +
+                "ORDER BY A." + COLUMN_DATE + " ASC, A." + COLUMN_TIME + " ASC";
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery(query, new String[]{username});
+    }
+
+    boolean addAppointment(String name, String date, String description, String time, String link, String username) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_NAME, name);
+            values.put(COLUMN_DATE, date);
+            values.put(COLUMN_DESCRIPTION, description);
+            values.put(COLUMN_TIME, time);
+            values.put(COLUMN_LINK, link);
+            values.put(COLUMN_USER_FK, username);
+
+            long newRowId = db.insert(TABLE_APPOINTMENTS, null, values);
+            if (newRowId == -1) {
+                return false;
+            }
+
+            ContentValues statusValues = new ContentValues();
+            statusValues.put(COLUMN_USERNAME, username);
+            statusValues.put(COLUMN_SCHEDID, newRowId);
+            statusValues.put(COLUMN_IS_FINISHED, 0);
+
+            long statusRowId = db.insert(TABLE_APPOINTMENT_STATUS, null, statusValues);
+            if (statusRowId == -1) {
+                return false;
+            }
+
+            db.setTransactionSuccessful();
+            return true;
+        } finally {
+            db.endTransaction();
+        }
     }
 
 
