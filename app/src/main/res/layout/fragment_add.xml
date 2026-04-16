@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Appointment"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:padding="16dp" />
+
+    <ImageButton
+        android:id="@+id/buttonadd"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@android:drawable/ic_input_add"
+        android:contentDescription="Add"
+        android:background="?android:attr/selectableItemBackground" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create New Appointment"
+        android:textSize="16sp"
+        android:padding="16dp" />
+
+</LinearLayout>
