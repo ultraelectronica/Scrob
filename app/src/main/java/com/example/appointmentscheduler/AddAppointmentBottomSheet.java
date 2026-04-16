@@ -1,7 +1,9 @@
 package com.example.appointmentscheduler;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
 
@@ -21,6 +24,24 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class AddAppointmentBottomSheet extends BottomSheetDialogFragment {
+
+    @Override
+    public int getTheme() {
+        return R.style.ThemeOverlay_App_BottomSheetDialog;
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
+        dialog.setOnShowListener(d -> {
+            View bottomSheet = dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            if (bottomSheet != null) {
+                bottomSheet.setBackgroundColor(Color.TRANSPARENT);
+            }
+        });
+        return dialog;
+    }
 
     public interface OnAppointmentAddedListener {
         void onAppointmentAdded();
@@ -43,17 +64,6 @@ public class AddAppointmentBottomSheet extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.bottom_sheet_add_appointment, container, false);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (getDialog() != null) {
-            View sheet = getDialog().findViewById(com.google.android.material.R.id.design_bottom_sheet);
-            if (sheet != null) {
-                sheet.setBackgroundColor(android.graphics.Color.TRANSPARENT);
-            }
-        }
     }
 
     @Override
@@ -124,13 +134,7 @@ public class AddAppointmentBottomSheet extends BottomSheetDialogFragment {
             return;
         }
 
-        String currentUsername = dbHelper.getCurrentUsername();
-        if (TextUtils.isEmpty(currentUsername)) {
-            Toast.makeText(requireContext(), "No active user found.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        boolean success = dbHelper.addAppointment(name, date, description, time, link, currentUsername);
+        boolean success = dbHelper.addAppointment(name, date, description, time, link);
         if (success) {
             Toast.makeText(requireContext(), "Appointment saved", Toast.LENGTH_SHORT).show();
             if (listener != null) {
